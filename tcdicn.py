@@ -510,14 +510,14 @@ class Client:
 
 def encrypt(data: str,key: str):
         data = str(data)
-        bData = int.from_bytes(bytes(data, "utf-8"))
-        bKey = int.from_bytes(bytes(key,"utf-8"))
-        mul = (bData * bKey).to_bytes('big')
+        bData = int.from_bytes(bytes(data, "utf-8"),"big")
+        bKey = int.from_bytes(bytes(key,"utf-8"),"big")
+        mul = (bData * bKey).to_bytes()
         return mul.decode()
     
 def decrypt(data: str, key: str):
         data = str(data)
-        bData = int.from_bytes(bytes(data, "utf-8"))
-        bKey = int.from_bytes(bytes(key,"utf-8"))
-        div = (bData * bKey).to_bytes('big')
+        bData = int.from_bytes(bytes(data, "utf-8"),"big")
+        bKey = int.from_bytes(bytes(key,"utf-8"),"big")
+        div = (bData * bKey).to_bytes()
         return div.decode()
