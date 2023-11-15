@@ -36,7 +36,7 @@ async def main():
         depth = random.randint(0,100)
         while True:
             await asyncio.sleep(random.uniform(1, 2))
-            depth = depth + random.randint(-5,5)
+            depth = depth + random.uniform(-5,5)
             if(depth < 0):
                 depth = 0
             pressure = depth * 10

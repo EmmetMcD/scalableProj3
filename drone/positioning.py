@@ -37,8 +37,8 @@ async def main():
         ypos = random.randint(0,100)
         while True:
             await asyncio.sleep(random.uniform(1, 2))
-            xpos = xpos + random.randint(-3,3)
-            ypos = ypos + random.randint(-3,3)
+            xpos = xpos + random.uniform(-3,3)
+            ypos = ypos + random.uniform(-3,3)
             if(xpos < 0):
                 xpos = 0
             elif (xpos > 100):

@@ -35,7 +35,7 @@ async def main():
     async def run_sensor():
         while True:
             await asyncio.sleep(random.uniform(1, 2))
-            camera = (random.randint(0,10) == 10)
+            camera = (random.randint(1,5) == 5)
             logging.info(f"Publishing camera = {camera}...")
             try:
                 await client.set("camera", camera)
