@@ -512,12 +512,12 @@ def encrypt(data: str,key: str):
         data = str(data)
         bData = int.from_bytes(bytes(data, "utf-8"))
         bKey = int.from_bytes(bytes(key,"utf-8"))
-        mul = (bData * bKey).to_bytes()
+        mul = (bData * bKey).to_bytes('big')
         return mul.decode()
     
 def decrypt(data: str, key: str):
         data = str(data)
         bData = int.from_bytes(bytes(data, "utf-8"))
         bKey = int.from_bytes(bytes(key,"utf-8"))
-        div = (bData * bKey).to_bytes()
+        div = (bData * bKey).to_bytes('big')
         return div.decode()
