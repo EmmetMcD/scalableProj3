@@ -509,9 +509,9 @@ class Client:
             logging.info(f"Fulfilled local interest in {tag} @ {new_time}")
 
 def encrypt(data: str,key: str):
-        bytes = bytes(data)
-        return str(bytes * key)
+        b = bytes(data)
+        return str(b * key)
     
 def decrypt(data: str, key: str):
-        bytes = bytes(data)
-        return str(bytes / key)
+        b = bytes(data)
+        return str(b / key)
