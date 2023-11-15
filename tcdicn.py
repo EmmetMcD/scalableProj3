@@ -8,7 +8,7 @@ from asyncio import DatagramTransport, StreamWriter, StreamReader
 from typing import List, Tuple, Dict
 
 
-VERSION = "0.2-dev"
+VERSION = "0.2-dev_group26"
 
 
 # Every peer of every node is given a score to get to each known client
@@ -17,17 +17,14 @@ VERSION = "0.2-dev"
 # TODO(score): congestion penalty
 _Score = float
 
-
 # The name of named data
 _Tag = str
-
 
 # The data of named data
 class _TagInfo:
     def __init__(self, value: str, time: float):
         self.value = value  # The actual data
         self.time = time  # When the data was published
-
 
 # Every node maintains a table of known interests for every known client
 # These interests only become known if the node is on the shortest path
@@ -37,12 +34,10 @@ class _InterestInfo:
         self.eol = eol  # End Of Life: When the interest will expire
         self.time = time  # When the interest was created
 
-
 # Every client is identified by a universally unique string
 # Clashes are not fatal but will result in both nodes having the interests or
 # the interest data of the other node being spread towards it by the network
 _ClientId = str
-
 
 # Every node maintains a table of known clients
 # This information is gossiped via the UDP broadcasts between peers
@@ -54,23 +49,17 @@ class _ClientInfo:
         self.tags = list()  # Tags this client is known to publish
         self.interests: Dict[_Tag, _InterestInfo] = dict()  # See _InterestInfo
 
-
 # Peers of a node are identified by their host and port
 class _PeerId:
-
     def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
-
     def __eq__(self, other):
         return self.host == other.host and self.port == other.port
-
     def __hash__(self):
         return hash((self.host, self.port))
-
     def __str__(self):
         return f"{self.host}:{self.port}"
-
 
 # Every node maintains a table of known peers
 # Nodes advertise their presence to their peers with UDP broadcasts
@@ -80,18 +69,14 @@ class _PeerInfo:
         self.eol = None  # End Of Life: When this peer will expire
         self.routes: Dict[_ClientId, _Score] = dict()  # See _Score
 
-
 # Utility function for setting up UDP transport and handling datagrams
 # Necessary because asyncio does not provide the construct as it does with TCP
 async def _start_udp_transport(callback, host: str, port: int):
     class Protocol:
-
         def connection_made(_, transport: DatagramTransport):
             pass
-
         def connection_lost(_, e: Exception):
             logging.warning(f"UDP transport lost: {e}")
-
         def datagram_received(_, msg_bytes: bytes, src: Tuple[str, int]):
             # Ignore nodes own broadcast messages
             l_addrs = socket.getaddrinfo(socket.gethostname(), port)
@@ -101,15 +86,12 @@ async def _start_udp_transport(callback, host: str, port: int):
                     if r_addr == l_addr:
                         return
             callback(msg_bytes, _PeerId(src[0], src[1]))
-
         def error_received(_, e: OSError):
             logging.warning(f"UDP transport error: {e}")
-
     return await asyncio.get_running_loop().create_datagram_endpoint(
         lambda: Protocol(),
         local_addr=(host if host is not None else "0.0.0.0", port),
         allow_broadcast=True)
-
 
 # Send a UDP broadcast advertisement to all peers
 async def _send_advert_msg(
@@ -121,7 +103,6 @@ async def _send_advert_msg(
         "eol": eol,
         "clients": clients,
     }).encode(), (peer.host, peer.port))
-
 
 # Push an interest for tags that are fresher than a time to some peer address
 # The interest belongs to client "id" and will expire at "eol"
@@ -143,7 +124,6 @@ async def _send_get_msg(
     await writer.drain()
     writer.close()
 
-
 # Push published value for tag with a given time to some peer address
 # This should be pushed back towards all relevant subscribers along the
 # shortest routes as defined by the _ClientInfo.interests and _PeerInfo.routes
@@ -159,12 +139,10 @@ async def _send_set_msg(peer: _PeerId, tag: _Tag, value: str, new_time: float):
     await writer.drain()
     writer.close()
 
-
 # Provides all the networking logic for interacting with a network of ICN nodes
 # It is required to be the only server running on the PI as it must listen on
-# 33333 to implement discovery+advertising to other ICN nodes on the network
+# 33335 to implement discovery+advertising to other ICN nodes on the network
 class Server:
-
     # Starts the server listening on a given port with a given peer broadcast
     # Time To Live (TTL) and TTL PreFire (TPF) factor
     def __init__(self, port: int, net_ttl: float, net_tpf: int):
@@ -173,7 +151,6 @@ class Server:
         self.net_tpf = net_tpf
 
         # Initialise state
-        # TODO(optimisation): load from disk in case of reboot
         self.content: Dict[_Tag, _TagInfo] = dict()
         self.clients: Dict[_ClientId, _ClientInfo] = dict()
         self.peers: Dict[_PeerId, _PeerInfo] = dict()
@@ -197,13 +174,10 @@ class Server:
             logging.debug("Broadcasting advertisement...")
 
             # Construct a table of clients to advertise to our peers
-            # TODO(optimisation): split up message to avoid fragmentation
-            # TODO(optimisation): respect clients ttp by broadcasting earlier
             clients = dict()
             for client, info in self.clients.items():
                 if info.ttp is None:
                     continue  # Only broadcast clients we have just heard of
-                # TODO(optimisation): this should be done elsewhere
                 peer = self._get_best_peer_to_client(client)
                 max_score = self.peers[peer].routes[client]
                 clients[client] = {
@@ -329,27 +303,6 @@ class Server:
         elif msg["type"] == "set":
             await self._process_set_msg(peer, msg)
 
-        """
-        # TODO(optimisation): incorporate ttp into batching responses
-        # TODO(optimisation): precompute and memorise a lot of this
-        # For now, immediately respond if we can
-        for client, client_info in self.clients.items():
-            for interest, interest_info in client_info.interests.items():
-                for tag, tag_info in self.content.items():
-                    if interest == tag and tag_info.time > interest_info.time:
-                        # TODO: handle failure
-                        logging.debug(f"Pushing set {tag} towards {client}")
-                        peer = self._get_best_peer_to_client(client)
-                        if peer:
-                            try:
-                                await _send_set_msg(
-                                    peer, tag, tag_info.value, tag_info.time)
-                            except OSError as e:
-                                logging.error(f"Error publishing data: {e}")
-                        else:
-                            logging.warning("Unable to do the thing 2")
-        """
-
     async def _process_get_msg(self, peer: _PeerId, msg):
         ttp = msg["ttp"]  # TODO(optimisation): batching responses
         eol = msg["eol"]
@@ -372,23 +325,6 @@ class Server:
                 or (last_time == self.clients[client].interests[tag].time
                     and eol > self.clients[client].interests[tag].eol):
             self.clients[client].interests[tag] = _InterestInfo(eol, last_time)
-            """
-            # TODO: eol timer tasks
-            # TODO: push new gets towards publishers if eol is greater than
-            # current max. For now, always push it
-            for client, client_info in self.clients.items():
-                if tag in client_info.tags:
-                    logging.debug(f"Pushing get {tag} towards {client}")
-                    peer = self._get_best_peer_to_client(client)
-                    if peer:
-                        try:
-                            await _send_get_msg(
-                                peer, ttp, eol, tag, last_time, client)
-                        except OSError as e:
-                            logging.error(f"Error sending interest: {e}")
-                    else:
-                        logging.warning("Unable to do the thing")
-            """
 
     async def _process_set_msg(self, peer: _PeerId, msg):
         tag = msg["tag"]
@@ -402,7 +338,6 @@ class Server:
         logging.info(f"Received update from {peer}: {tag}={value}@{new_time}")
         self.content[tag] = _TagInfo(value, new_time)
 
-        # TODO(v0.2): remove gossiping once routing is finished
         for peer in self.peers:
             try:
                 await _send_set_msg(peer, tag, value, new_time)
@@ -443,7 +378,6 @@ class Client:
         self.net_ttp = net_ttp
 
         # Initialise state
-        # TODO(optimisation): load from disk in case of reboot
         self.pending_interests: Dict[_Tag, asyncio.Future] = dict()
         self.content: Dict[_Tag, _TagInfo] = dict()
 
@@ -463,7 +397,6 @@ class Client:
     # Repeats request every TTL/TPF seconds until successful or cancelled
     # Allows each intermediate node to batch responses for up to TTP seconds
     async def get(self, tag: _Tag, ttl: float, tpf: int, ttp: float):
-
         # Many get() calls can be waiting on one pending interests
         if tag not in self.pending_interests:
             loop = asyncio.get_running_loop()
