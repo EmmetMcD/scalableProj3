@@ -9,7 +9,9 @@ import tcdicn
 async def main():
 
     # Get parameters or defaults
-    id = os.environ.get("TCDICN_ID")
+    file = open("constants.txt","r")
+    id = file.readline().strip()
+    key = file.readline().strip()
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
     server_host = os.environ.get("TCDICN_SERVER_HOST", "localhost")
     server_port = int(os.environ.get("TCDICN_SERVER_PORT", 33335))
@@ -37,8 +39,9 @@ async def main():
             await asyncio.sleep(random.uniform(1, 2))
             angle = random.uniform(0,359)
             logging.info(f"Publishing {id}_angle = {angle}...")
+            angleStr = client.encrypt(angle,key)
             try:
-                await client.set(id+"_angle", angle)
+                await client.set(id+"_angle", angleStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

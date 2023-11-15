@@ -9,7 +9,9 @@ import tcdicn
 async def main():
 
     # Get parameters or defaults
-    id = os.environ.get("TCDICN_ID")
+    file = open("constants.txt","r")
+    id = file.readline().strip()
+    key = file.readline().strip()
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
     server_host = os.environ.get("TCDICN_SERVER_HOST", "localhost")
     server_port = int(os.environ.get("TCDICN_SERVER_PORT", 33335))
@@ -41,13 +43,15 @@ async def main():
                 depth = 0
             pressure = depth * 10
             logging.info(f"Publishing {id}+_pressure = {pressure}...")
+            pressureStr = client.encrypt(pressure,key)
             try:
-                await client.set(f"{id}_pressure", pressure)
+                await client.set(f"{id}_pressure", pressureStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
             logging.info(f"Publishing {id}_depth = {depth}...")
+            depthStr = client.encrypt(depth,key)
             try:
-                await client.set(f"{id}_depth", depth)
+                await client.set(f"{id}_depth", depthStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

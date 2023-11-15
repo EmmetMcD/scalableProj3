@@ -9,7 +9,9 @@ import tcdicn
 async def main():
 
     # Get parameters or defaults
-    id = os.environ.get("TCDICN_ID")
+    file = open("constants.txt","r")
+    id = file.readline().strip()
+    key = file.readline().strip()
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
     server_host = os.environ.get("TCDICN_SERVER_HOST", "localhost")
     server_port = int(os.environ.get("TCDICN_SERVER_PORT", 33335))
@@ -48,13 +50,15 @@ async def main():
             elif (ypos > 100):
                 ypos = 100
             logging.info(f"Publishing {id}_ypos = {ypos}...")
+            yStr = client.encrypt(ypos,key)
             try:
-                await client.set(id+"_ypos", ypos)
+                await client.set(id+"_ypos", yStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
             logging.info(f"Publishing {id}_xpos = {xpos}...")
+            xStr = client.encrypt(xpos,key)
             try:
-                await client.set(id+"_xpos", xpos)
+                await client.set(id+"_xpos", xStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

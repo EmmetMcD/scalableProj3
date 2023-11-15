@@ -57,7 +57,7 @@ async def main():
                 tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 tag = task.get_name()
-                value = client.decrypt(task.result(),key)
+                value = float(client.decrypt(task.result(),key))
                 logging.info(f"Received {tag}={value}")
                 if("depth" in tag):
                     if(powerSafe):

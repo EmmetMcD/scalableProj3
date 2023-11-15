@@ -9,7 +9,9 @@ import tcdicn
 async def main():
 
     # Get parameters or defaults
-    id = os.environ.get("TCDICN_ID")
+    file = open("constants.txt","r")
+    id = file.readline().strip()
+    key = file.readline().strip()
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
     server_host = os.environ.get("TCDICN_SERVER_HOST", "localhost")
     server_port = int(os.environ.get("TCDICN_SERVER_PORT", 33335))
@@ -65,20 +67,24 @@ async def main():
                 value = task.result()
                 logging.info(f"Received {tag}={value}")
                 if("depth" in tag):
-                    myDepth = value
+                    myDepth = float(client.decrypt(value,key))
                 elif("xpos" in tag):
-                    myX = value
+                    myX = float(client.decrypt(value,key))
                 elif("ypos" in tag):
-                    myY = value
+                    myY = float(client.decrypt(value,key))
                 elif(tag == "scienceList"):
-                    myList = value
-                elif(("camera" in tag) & value):
-                    scienceString = str(myDepth)+","+str(myX)+","+str(myY)
+                    newList = (client.decrypt(value,key)).split()
+                    if newList.size >= myList.size:
+                        myList = newList
+                elif(("camera" in tag) & int(client.decrypt(value,key))>0):
+                    scienceString = str(myDepth)[:5]+","+str(myX)[:5]+","+str(myY)[:5]
                     if(scienceString not in myList):
                         myList.append(scienceString)
                         logging.info(f"Publishing to scienceList = {scienceString}...")
+                        listStr = ""
+                        listStr += listStr.join(myList)
                         try:
-                            await client.set("scienceList", myList)
+                            await client.set("scienceList", listStr)
                         except OSError as e:
                             logging.error(f"Failed to publish: {e}")
                         logging.info(f"Resubscribing to {tag}...")

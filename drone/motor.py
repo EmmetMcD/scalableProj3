@@ -9,7 +9,9 @@ import tcdicn
 async def main():
 
     # Get parameters or defaults
-    id = os.environ.get("TCDICN_ID")
+    file = open("constants.txt","r")
+    id = file.readline().strip()
+    key = file.readline().strip()
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
     server_host = os.environ.get("TCDICN_SERVER_HOST", "localhost")
     server_port = int(os.environ.get("TCDICN_SERVER_PORT", 33335))
@@ -53,7 +55,7 @@ async def main():
                 tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 tag = task.get_name()
-                value = task.result()
+                value = float(client.decrypt(task.result(),key))
                 logging.info(f"Received {tag}={value}")
                 if(value >= 95):
                     logging.info(f"{tag} approaching 100, adjusting...")
