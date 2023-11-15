@@ -39,7 +39,7 @@ async def main():
             await asyncio.sleep(random.uniform(1, 2))
             angle = random.uniform(0,359)
             logging.info(f"Publishing {id}_angle = {angle}...")
-            angleStr = client.encrypt(angle,key)
+            angleStr = tcdicn.encrypt(angle,key)
             try:
                 await client.set(id+"_angle", angleStr)
             except OSError as e:

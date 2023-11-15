@@ -40,7 +40,7 @@ async def main():
             await asyncio.sleep(random.uniform(1, 2))
             power = power - (random.uniform(0.1,0.6))
             logging.info(f"Publishing {id}_power = {power}...")
-            powerStr = client.encrypt(power,key)
+            powerStr = tcdicn.encrypt(power,key)
             try:
                 await client.set(id+"_power", powerStr)
             except OSError as e:

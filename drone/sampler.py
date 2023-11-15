@@ -67,22 +67,23 @@ async def main():
                 value = task.result()
                 logging.info(f"Received {tag}={value}")
                 if("depth" in tag):
-                    myDepth = float(client.decrypt(value,key))
+                    myDepth = float(tcdicn.decrypt(value,key))
                 elif("xpos" in tag):
-                    myX = float(client.decrypt(value,key))
+                    myX = float(tcdicn.decrypt(value,key))
                 elif("ypos" in tag):
-                    myY = float(client.decrypt(value,key))
+                    myY = float(tcdicn.decrypt(value,key))
                 elif(tag == "scienceList"):
-                    newList = (client.decrypt(value,key)).split()
+                    newList = (tcdicn.decrypt(value,key)).split()
                     if newList.size >= myList.size:
                         myList = newList
-                elif(("camera" in tag) & int(client.decrypt(value,key))>0):
+                elif(("camera" in tag) & int(tcdicn.decrypt(value,key))>0):
                     scienceString = str(myDepth)[:5]+","+str(myX)[:5]+","+str(myY)[:5]
                     if(scienceString not in myList):
                         myList.append(scienceString)
                         logging.info(f"Publishing to scienceList = {scienceString}...")
                         listStr = ""
                         listStr += listStr.join(myList)
+                        listStr = tcdicn.encrypt(listStr,key)
                         try:
                             await client.set("scienceList", listStr)
                         except OSError as e:

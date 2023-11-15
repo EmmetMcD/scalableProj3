@@ -55,7 +55,7 @@ async def main():
                 tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 tag = task.get_name()
-                value = float(client.decrypt(task.result(),key))
+                value = float(tcdicn.decrypt(task.result(),key))
                 logging.info(f"Received {tag}={value}")
                 if(value >= 95):
                     logging.info(f"{tag} approaching 100, adjusting...")

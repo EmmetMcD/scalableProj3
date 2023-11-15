@@ -41,7 +41,7 @@ async def main():
             if(random.randint(1,5) == 5):
                 camera = 1
             logging.info(f"Publishing {id}_camera = {camera}...")
-            cameraStr = client.encrypt(camera,key)
+            cameraStr = tcdicn.encrypt(camera,key)
             try:
                 await client.set(f"{id}_camera", cameraStr)
             except OSError as e:

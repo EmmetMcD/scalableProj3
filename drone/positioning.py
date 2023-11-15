@@ -50,13 +50,13 @@ async def main():
             elif (ypos > 100):
                 ypos = 100
             logging.info(f"Publishing {id}_ypos = {ypos}...")
-            yStr = client.encrypt(ypos,key)
+            yStr = tcdicn.encrypt(ypos,key)
             try:
                 await client.set(id+"_ypos", yStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
             logging.info(f"Publishing {id}_xpos = {xpos}...")
-            xStr = client.encrypt(xpos,key)
+            xStr = tcdicn.encrypt(xpos,key)
             try:
                 await client.set(id+"_xpos", xStr)
             except OSError as e:
