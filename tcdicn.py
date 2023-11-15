@@ -509,7 +509,7 @@ class Client:
             del self.pending_interests[tag]
             logging.info(f"Fulfilled local interest in {tag} @ {new_time}")
 
-def encrypt(data: str,key: str):
+def encrypt(data: str,key: bytes):
         data = str(data)
         fernet = Fernet(key)
         return fernet.encrypt(data.encode())
@@ -519,7 +519,7 @@ def encrypt(data: str,key: str):
         # mul = (bData * bKey).to_bytes(216,"big")
         # return mul.decode(errors="ignore")
     
-def decrypt(data: str, key: str):
+def decrypt(data: str, key: bytes):
         data = str(data)
         fernet = Fernet(key)
         return fernet.decrypt(data).decode()
