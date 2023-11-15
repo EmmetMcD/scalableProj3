@@ -510,10 +510,12 @@ class Client:
 
 def encrypt(data: str,key: str):
         data = str(data)
-        b = bytes(data, "utf-8")
-        return str(b * key)
+        bData = bytes(data, "utf-8")
+        bKey = bytes(key,"utf-8")
+        return str(bData * bKey)
     
 def decrypt(data: str, key: str):
         data = str(data)
-        b = bytes(data,"utf-8")
-        return str(b / key)
+        bData = bytes(data, "utf-8")
+        bKey = bytes(key,"utf-8")
+        return str(bData / bKey)
