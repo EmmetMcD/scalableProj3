@@ -511,7 +511,7 @@ class Client:
 
 def encrypt(data: str,key: bytes):
         data = str(data)
-        data = bytes(data)
+        data = bytes(data,"utf-8")
         fernet = Fernet(key)
         return fernet.encrypt(data).encode()
         # data = str(data)
@@ -522,7 +522,7 @@ def encrypt(data: str,key: bytes):
     
 def decrypt(data: str, key: bytes):
         data = str(data)
-        data = bytes(data)
+        data = bytes(data,"utf-8")
         fernet = Fernet(key)
         return fernet.decrypt(data).decode()
         # data = str(data)
