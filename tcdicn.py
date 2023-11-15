@@ -4,6 +4,7 @@ import logging
 import signal
 import socket
 import time
+from cryptography.fernet import Fernet
 from asyncio import DatagramTransport, StreamWriter, StreamReader
 from typing import List, Tuple, Dict
 
@@ -510,14 +511,20 @@ class Client:
 
 def encrypt(data: str,key: str):
         data = str(data)
-        bData = int.from_bytes(bytes(data, "utf-8"),"big")
-        bKey = int.from_bytes(bytes(key,"utf-8"),"big")
-        mul = (bData * bKey).to_bytes(216,"big")
-        return mul.decode(errors="ignore")
+        fernet = Fernet(key)
+        return fernet.encrypt(data.encode())
+        # data = str(data)
+        # bData = int.from_bytes(bytes(data, "utf-8"),"big")
+        # bKey = int.from_bytes(bytes(key,"utf-8"),"big")
+        # mul = (bData * bKey).to_bytes(216,"big")
+        # return mul.decode(errors="ignore")
     
 def decrypt(data: str, key: str):
         data = str(data)
-        bData = int.from_bytes(bytes(data, "utf-8"),"big")
-        bKey = int.from_bytes(bytes(key,"utf-8"),"big")
-        div = (bData * bKey).to_bytes(216,"big")
-        return div.decode(errors="ignore")
+        fernet = Fernet(key)
+        return fernet.decrypt(data).decode()
+        # data = str(data)
+        # bData = int.from_bytes(bytes(data, "utf-8"),"big")
+        # bKey = int.from_bytes(bytes(key,"utf-8"),"big")
+        # div = (bData * bKey).to_bytes(216,"big")
+        # return div.decode(errors="ignore")
