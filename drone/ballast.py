@@ -9,7 +9,7 @@ import tcdicn
 async def main():
 
     # Get parameters or defaults
-    file = open("constants","r")
+    file = open("constants.txt","r")
     id = file.readline().strip()
     key = file.readline().strip()
     #id = os.environ.get("TCDICN_ID")
