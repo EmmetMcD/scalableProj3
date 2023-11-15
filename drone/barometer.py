@@ -43,13 +43,13 @@ async def main():
                 depth = 0
             pressure = depth * 10
             logging.info(f"Publishing {id}+_pressure = {pressure}...")
-            pressureStr = client.encrypt(pressure,key)
+            pressureStr = tcdicn.encrypt(pressure,key)
             try:
                 await client.set(f"{id}_pressure", pressureStr)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
             logging.info(f"Publishing {id}_depth = {depth}...")
-            depthStr = client.encrypt(depth,key)
+            depthStr = tcdicn.encrypt(depth,key)
             try:
                 await client.set(f"{id}_depth", depthStr)
             except OSError as e:

@@ -508,10 +508,10 @@ class Client:
             del self.pending_interests[tag]
             logging.info(f"Fulfilled local interest in {tag} @ {new_time}")
 
-    def encrypt(data: str,key: str):
+def encrypt(data: str,key: str):
         bytes = bytes(data)
         return str(bytes * key)
     
-    def decrypt(data: str, key: str):
+def decrypt(data: str, key: str):
         bytes = bytes(data)
         return str(bytes / key)
