@@ -27,7 +27,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["xpos","ypos"],
+        id+"_POS", port, [id+"_xpos",id+"_ypos"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -47,14 +47,14 @@ async def main():
                 ypos = 0
             elif (ypos > 100):
                 ypos = 100
-            logging.info(f"Publishing ypos = {ypos}...")
+            logging.info(f"Publishing {id}_ypos = {ypos}...")
             try:
-                await client.set("ypos", ypos)
+                await client.set(id+"_ypos", ypos)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
-            logging.info(f"Publishing xpos = {xpos}...")
+            logging.info(f"Publishing {id}_xpos = {xpos}...")
             try:
-                await client.set("xpos", xpos)
+                await client.set(id+"_xpos", xpos)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

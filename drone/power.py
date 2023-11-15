@@ -27,7 +27,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["power"],
+        id+"_POW", port, [id+"_power"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -37,15 +37,15 @@ async def main():
         while True:
             await asyncio.sleep(random.uniform(1, 2))
             power = power - (random.uniform(0.1,0.6))
-            logging.info(f"Publishing power = {power}...")
+            logging.info(f"Publishing {id}_power = {power}...")
             try:
-                await client.set("power", power)
+                await client.set(id+"_power", power)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 
 
     # Initialise execution of the sensor logic as a coroutine
-    logging.info("Starting positioning...")
+    logging.info("Starting power...")
     sensor = run_sensor()
 
     # Wait for the client to shutdown while executing the sensor coroutine

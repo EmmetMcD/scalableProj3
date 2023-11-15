@@ -30,7 +30,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, [],
+        id+"_BAL", port, [],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -43,10 +43,10 @@ async def main():
             task = asyncio.create_task(getter, name=tag)
             tasks.add(task)
 
-        logging.info(f"Subscribing to depth...")
-        subscribe("depth")
-        logging.info(f"Subscribing to power...")
-        subscribe("power")
+        logging.info(f"Subscribing to {id}_depth...")
+        subscribe(f"{id}_depth")
+        logging.info(f"Subscribing to {id}_power...")
+        subscribe(f"{id}_power")
 
         powerSafe = True
         while True:
@@ -56,13 +56,13 @@ async def main():
                 tag = task.get_name()
                 value = task.result()
                 logging.info(f"Received {tag}={value}")
-                if(tag == "depth"):
+                if("depth" in tag):
                     if(powerSafe):
                         if(value >= 95):
                             logging.info("Depth approaching 100, rising...")
                         elif(value <= 5):
                             logging.info("Depth approaching 0, descending...")
-                elif(tag == "power"):
+                elif("power" in tag):
                     if(value <= 10):
                         logging.info("Power approaching 0, surfacing...")
                 logging.info(f"Resubscribing to {tag}...")

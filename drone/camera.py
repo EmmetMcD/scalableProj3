@@ -27,7 +27,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["camera"],
+        id+"_CAM", port, [id+"_camera"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -36,9 +36,9 @@ async def main():
         while True:
             await asyncio.sleep(random.uniform(1, 2))
             camera = (random.randint(1,5) == 5)
-            logging.info(f"Publishing camera = {camera}...")
+            logging.info(f"Publishing {id}_camera = {camera}...")
             try:
-                await client.set("camera", camera)
+                await client.set(f"{id}_camera", camera)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

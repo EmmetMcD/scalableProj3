@@ -27,7 +27,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["pressure","depth"],
+        id+"_BAR", port, [id+"_pressure",id+"_depth"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -40,14 +40,14 @@ async def main():
             if(depth < 0):
                 depth = 0
             pressure = depth * 10
-            logging.info(f"Publishing Pressure = {pressure}...")
+            logging.info(f"Publishing {id}+_pressure = {pressure}...")
             try:
-                await client.set("pressure", pressure)
+                await client.set(f"{id}_pressure", pressure)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
-            logging.info(f"Publishing Depth = {depth}...")
+            logging.info(f"Publishing {id}_depth = {depth}...")
             try:
-                await client.set("depth", depth)
+                await client.set(f"{id}_depth", depth)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

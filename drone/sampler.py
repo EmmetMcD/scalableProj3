@@ -30,7 +30,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["scienceList"],
+        id+"_SAM", port, ["scienceList"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -43,14 +43,14 @@ async def main():
             task = asyncio.create_task(getter, name=tag)
             tasks.add(task)
 
-        logging.info(f"Subscribing to depth...")
-        subscribe("depth")
-        logging.info(f"Subscribing to xpos...")
-        subscribe("xpos")
-        logging.info(f"Subscribing to ypos...")
-        subscribe("ypos")
-        logging.info(f"Subscribing to camera...")
-        subscribe("camera")
+        logging.info(f"Subscribing to {id}_depth...")
+        subscribe(id+"_depth")
+        logging.info(f"Subscribing to {id}_xpos...")
+        subscribe(id+"_xpos")
+        logging.info(f"Subscribing to {id}_ypos...")
+        subscribe(id+"_ypos")
+        logging.info(f"Subscribing to {id}_camera...")
+        subscribe(id+"_camera")
         logging.info(f"Subscribing to scienceList...")
         subscribe("scienceList")
 
@@ -64,15 +64,15 @@ async def main():
                 tag = task.get_name()
                 value = task.result()
                 logging.info(f"Received {tag}={value}")
-                if(tag == "depth"):
+                if("depth" in tag):
                     myDepth = value
-                elif(tag == "xpos"):
+                elif("xpos" in tag):
                     myX = value
-                elif(tag == "ypos"):
+                elif("ypos" in tag):
                     myY = value
                 elif(tag == "scienceList"):
                     myList = value
-                elif((tag == "camera") & value):
+                elif(("camera" in tag) & value):
                     scienceString = str(myDepth)+","+str(myX)+","+str(myY)
                     if(scienceString not in myList):
                         myList.append(scienceString)

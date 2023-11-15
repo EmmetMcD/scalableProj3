@@ -27,7 +27,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["angle"],
+        id+"_COM", port, [id+"_angle"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -36,9 +36,9 @@ async def main():
         while True:
             await asyncio.sleep(random.uniform(1, 2))
             angle = random.uniform(0,359)
-            logging.info(f"Publishing angle = {angle}...")
+            logging.info(f"Publishing {id}_angle = {angle}...")
             try:
-                await client.set("angle", angle)
+                await client.set(id+"_angle", angle)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 

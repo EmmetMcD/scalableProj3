@@ -30,7 +30,7 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, [],
+        id+"_MOT", port, [],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -43,10 +43,10 @@ async def main():
             task = asyncio.create_task(getter, name=tag)
             tasks.add(task)
 
-        logging.info(f"Subscribing to xpos...")
-        subscribe("xpos")
-        logging.info(f"Subscribing to ypos...")
-        subscribe("ypos")
+        logging.info(f"Subscribing to {id}_xpos...")
+        subscribe(id+"_xpos")
+        logging.info(f"Subscribing to {id}_ypos...")
+        subscribe(id+"_ypos")
 
         while True:
             done, tasks = await asyncio.wait(
