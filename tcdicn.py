@@ -513,11 +513,11 @@ def encrypt(data: str,key: str):
         bData = int.from_bytes(bytes(data, "utf-8"),"big")
         bKey = int.from_bytes(bytes(key,"utf-8"),"big")
         mul = (bData * bKey).to_bytes(216,"big")
-        return mul.decode()
+        return mul.decode(errors="ignore")
     
 def decrypt(data: str, key: str):
         data = str(data)
         bData = int.from_bytes(bytes(data, "utf-8"),"big")
         bKey = int.from_bytes(bytes(key,"utf-8"),"big")
         div = (bData * bKey).to_bytes(216,"big")
-        return div.decode()
+        return div.decode(errors="ignore")
