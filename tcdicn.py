@@ -512,7 +512,7 @@ class Client:
 def encrypt(data: str,key: bytes):
         data = str(data)
         fernet = Fernet(key)
-        return fernet.encrypt(data.encode())
+        return fernet.encrypt(data).encode()
         # data = str(data)
         # bData = int.from_bytes(bytes(data, "utf-8"),"big")
         # bKey = int.from_bytes(bytes(key,"utf-8"),"big")
