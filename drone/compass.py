@@ -24,15 +24,10 @@ async def main():
         format="%(asctime)s.%(msecs)04d [%(levelname)s] %(message)s",
         level=logging.INFO, datefmt="%H:%M:%S:%m")
 
-    # Pick a random subset of tags to publish to
-    tags = ["foo", "bar", "baz", "qux", "quux"]
-    tags = random.sample(tags, random.randint(1, 3))
-    tags.append("always")
-
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, tags,
+        id, port, ["angle"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
@@ -40,16 +35,16 @@ async def main():
     async def run_sensor():
         while True:
             await asyncio.sleep(random.uniform(1, 2))
-            tag = random.choice(tags)
-            value = random.randint(0, 10)
-            logging.info(f"Publishing {tag}={value}...")
+            angle = random.uniform(0,359)
+            logging.info(f"Publishing angle = {angle}...")
             try:
-                await client.set(tag, value)
+                await client.set("angle", angle)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 
+
     # Initialise execution of the sensor logic as a coroutine
-    logging.info("Starting sensor...")
+    logging.info("Starting compass...")
     sensor = run_sensor()
 
     # Wait for the client to shutdown while executing the sensor coroutine
@@ -62,3 +57,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+

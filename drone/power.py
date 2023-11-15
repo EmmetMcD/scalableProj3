@@ -27,24 +27,25 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id, port, ["camera"],
+        id, port, ["power"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
     # Publish random data to a random tag every couple of seconds
     async def run_sensor():
+        power = random.uniform(85,100)
         while True:
             await asyncio.sleep(random.uniform(1, 2))
-            camera = (random.randint(1,5) == 5)
-            logging.info(f"Publishing camera = {camera}...")
+            power = power - (random.uniform(0.1,0.6))
+            logging.info(f"Publishing power = {power}...")
             try:
-                await client.set("camera", camera)
+                await client.set("power", power)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
 
 
     # Initialise execution of the sensor logic as a coroutine
-    logging.info("Starting camera...")
+    logging.info("Starting positioning...")
     sensor = run_sensor()
 
     # Wait for the client to shutdown while executing the sensor coroutine

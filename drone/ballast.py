@@ -45,7 +45,10 @@ async def main():
 
         logging.info(f"Subscribing to depth...")
         subscribe("depth")
+        logging.info(f"Subscribing to power...")
+        subscribe("power")
 
+        powerSafe = True
         while True:
             done, tasks = await asyncio.wait(
                 tasks, return_when=asyncio.FIRST_COMPLETED)
@@ -53,11 +56,20 @@ async def main():
                 tag = task.get_name()
                 value = task.result()
                 logging.info(f"Received {tag}={value}")
+                if(tag == "depth"):
+                    if(powerSafe):
+                        if(value >= 95):
+                            logging.info("Depth approaching 100, rising...")
+                        elif(value <= 5):
+                            logging.info("Depth approaching 0, descending...")
+                elif(tag == "power"):
+                    if(value <= 10):
+                        logging.info("Power approaching 0, surfacing...")
                 logging.info(f"Resubscribing to {tag}...")
                 subscribe(tag)
 
     # Initialise execution of the actuator logic as a coroutine
-    logging.info("Starting actuator...")
+    logging.info("Starting ballast...")
     actuator = run_actuator()
 
     # Wait for the client to shutdown while executing the actuator coroutine

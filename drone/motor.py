@@ -27,11 +27,6 @@ async def main():
         format="%(asctime)s.%(msecs)04d [%(levelname)s] %(message)s",
         level=logging.INFO, datefmt="%H:%M:%S:%m")
 
-    # Pick a random subset of tags to subscribe to
-    tags = ["foo", "bar", "baz", "qux", "quux"]
-    tags = random.sample(tags, random.randint(1, 3))
-    tags.append("always")
-
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
@@ -48,9 +43,10 @@ async def main():
             task = asyncio.create_task(getter, name=tag)
             tasks.add(task)
 
-        for tag in tags:
-            logging.info(f"Subscribing to {tag}...")
-            subscribe(tag)
+        logging.info(f"Subscribing to xpos...")
+        subscribe("xpos")
+        logging.info(f"Subscribing to ypos...")
+        subscribe("ypos")
 
         while True:
             done, tasks = await asyncio.wait(
@@ -59,11 +55,15 @@ async def main():
                 tag = task.get_name()
                 value = task.result()
                 logging.info(f"Received {tag}={value}")
+                if(value >= 95):
+                    logging.info(f"{tag} approaching 100, adjusting...")
+                elif(value <= 5):
+                    logging.info(f"{tag} approaching 0, adjusting...")
                 logging.info(f"Resubscribing to {tag}...")
                 subscribe(tag)
 
     # Initialise execution of the actuator logic as a coroutine
-    logging.info("Starting actuator...")
+    logging.info("Starting motors...")
     actuator = run_actuator()
 
     # Wait for the client to shutdown while executing the actuator coroutine
@@ -76,3 +76,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
