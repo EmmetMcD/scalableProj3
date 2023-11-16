@@ -1,0 +1,19 @@
+tmux new-session -d -s Drone
+tmux new-window -d -n server
+tmux new-window -d -n ballast
+tmux new-window -d -n barometer
+tmux new-window -d -n camera
+tmux new-window -d -n compass
+tmux new-window -d -n motor
+tmux new-window -d -n positioning
+tmux new-window -d -n power
+tmux new-window -d -n sampler
+tmux send-keys -t Drone:server "PYTHONPATH=. python3 ./drone/server.py" Enter
+tmux send-keys -t Drone:ballast "PYTHONPATH=. python3 ./drone/ballast.py" Enter
+tmux send-keys -t Drone:barometer "PYTHONPATH=. python3 ./drone/barometer.py" Enter
+tmux send-keys -t Drone:camera "PYTHONPATH=. python3 ./drone/camera.py" Enter
+tmux send-keys -t Drone:compass "PYTHONPATH=. python3 ./drone/compass.py" Enter
+tmux send-keys -t Drone:motor "PYTHONPATH=. python3 ./drone/motor.py" Enter
+tmux send-keys -t Drone:positioning "PYTHONPATH=. python3 ./drone/positioning.py" Enter
+tmux send-keys -t Drone:power "PYTHONPATH=. python3 ./drone/power.py" Enter
+tmux send-keys -t Drone:sampler "PYTHONPATH=. python3 ./drone/sampler.py" Enter
