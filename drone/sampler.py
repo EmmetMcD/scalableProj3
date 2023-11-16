@@ -64,24 +64,25 @@ async def main():
                 tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 tag = task.get_name()
-                value = task.result()
+                value = tcdicn.decrypt(task.result(),key)
+
                 logging.info(f"Received {tag}={value}")
                 if("depth" in tag):
-                    myDepth = float(tcdicn.decrypt(value,key))
+                    myDepth = float(value)
                 elif("xpos" in tag):
-                    myX = float(tcdicn.decrypt(value,key))
+                    myX = float(value)
                 elif("ypos" in tag):
-                    myY = float(tcdicn.decrypt(value,key))
+                    myY = float(value)
                 elif(tag == "scienceList"):
-                    newList = (tcdicn.decrypt(value,key)).split()
-                    if newList.size >= myList.size:
+                    newList = (value).split()
+                    if len(newList) >= len(myList):
                         myList = newList
-                elif(("camera" in tag) & int(tcdicn.decrypt(value,key))>0):
+                elif(("camera" in tag) & int(value)>0):
                     scienceString = str(myDepth)[:5]+","+str(myX)[:5]+","+str(myY)[:5]
                     if(scienceString not in myList):
                         myList.append(scienceString)
                         logging.info(f"Publishing to scienceList = {scienceString}...")
-                        listStr = ""
+                        listStr = " "
                         listStr += listStr.join(myList)
                         listStr = tcdicn.encrypt(listStr,key)
                         try:
