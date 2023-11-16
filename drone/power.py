@@ -37,7 +37,7 @@ async def main():
     async def run_sensor():
         power = random.uniform(85,100)
         while True:
-            await asyncio.sleep(random.uniform(1, 2))
+            await asyncio.sleep(random.uniform(5, 6))
             power = power - (random.uniform(0.1,0.6))
             logging.info(f"Publishing {id}_power = {power}...")
             powerStr = tcdicn.encrypt(power,key)

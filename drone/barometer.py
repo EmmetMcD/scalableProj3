@@ -42,7 +42,7 @@ async def main():
             if(depth < 0):
                 depth = 0
             pressure = depth * 10
-            logging.info(f"Publishing {id}+_pressure = {pressure}...")
+            logging.info(f"Publishing {id}_pressure = {pressure}...")
             pressureStr = tcdicn.encrypt(pressure,key)
             try:
                 await client.set(f"{id}_pressure", pressureStr)
