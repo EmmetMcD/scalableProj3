@@ -1,6 +1,17 @@
 Requires python3.8 and asyncio.
 
+
+
 Each device-name is in the constants file - update this for each new device in the network
+
+genDrone is a handy tmux-based script that spins up all the Drone's sensors/actuators:
+
+    source genDrone
+    tmux attach
+
+You can then use ctrl+B [SENSORNAME/INT] to look at different devices' loggings
+
+For manual running:
 Run the server:
 
     PYTHONPATH=. python3 ./drone/server.py
