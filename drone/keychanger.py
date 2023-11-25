@@ -41,10 +41,10 @@ async def main():
     # Publish random data to a random tag every couple of seconds
     async def run_sensor():
         global key
-        logging.info(f"KEY: {key}")
         while True:
             await asyncio.sleep(10)
             newKey = Fernet.generate_key();
+            # Obviously this shouldn't actually be printed like this, but it's useful for viewing the simulation
             logging.info(f"Publishing keychange = {newKey}...")
             newKeyEnc = tcdicn.encrypt(newKey,key)
             try:

@@ -10,12 +10,13 @@ import random
 import sys
 import tcdicn
 
-
+key = ""
 async def main():
 
     # Get parameters or defaults
     file = open("constants.txt","r")
     id = file.readline().strip()
+    global key
     key = open("key","rb").read()
     #id = os.environ.get("TCDICN_ID")
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
@@ -55,6 +56,8 @@ async def main():
         subscribe(f"{id}_depth")
         logging.info(f"Subscribing to {id}_power...")
         subscribe(f"{id}_power")
+        logging.info(f"Subscribing to keychange...")
+        subscribe(f"keychange")
 
         powerSafe = True
         while True:
@@ -73,6 +76,9 @@ async def main():
                 elif("power" in tag):
                     if(value <= 10):
                         logging.info("Power approaching 0, surfacing...")
+                elif("keychange" in tag):
+                    global key
+                    key = value
                 logging.info(f"Resubscribing to {tag}...")
                 subscribe(tag)
 
