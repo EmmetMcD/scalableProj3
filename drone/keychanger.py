@@ -8,12 +8,14 @@ import random
 import sys
 import tcdicn
 from cryptography.fernet import Fernet
+key = ""
 
 async def main():
 
     # Get parameters or defaults
     file = open("constants.txt","r")
     id = file.readline().strip()
+    global key
     key = open("key","rb").read()
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
     server_host = os.environ.get("TCDICN_SERVER_HOST", "localhost")
@@ -38,7 +40,6 @@ async def main():
 
     # Publish random data to a random tag every couple of seconds
     async def run_sensor():
-        global key
         logging.info(f"KEY: {key}")
         while True:
             await asyncio.sleep(10)
