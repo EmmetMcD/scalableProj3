@@ -45,6 +45,7 @@ async def main():
 
     # Subscribe to random subset of data
     async def run_actuator():
+        global key
         tasks = set()
 
         def subscribe(tag):
@@ -77,7 +78,6 @@ async def main():
                     if(value <= 10):
                         logging.info("Power approaching 0, surfacing...")
                 elif("keychange" in tag):
-                    global key
                     key = value
                 logging.info(f"Resubscribing to {tag}...")
                 subscribe(tag)
