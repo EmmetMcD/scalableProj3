@@ -1,5 +1,10 @@
-# Keychanger device that updates network key every 10s to simulate key expiry
+# Keychanger device that tries to update network key every 10s to simulate key expiry
 # Admitedly hacky solution, and not incredibly secure, but slightly more secure vs. never updating the key.
+# THIS DOES NOT WORK, so it's broadcast key is not used by any devices. 
+# The issue is down to encoding, I think, but I'm implementing this pretty close to the deadline
+# and don't believe I'd get it working in time.
+# The Code here remains for posterity, so the grader has an idea of what we were going for.
+
 # Main Contributor - Emmet McDonald
 import asyncio
 import logging
