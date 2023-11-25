@@ -67,7 +67,7 @@ async def main():
             for task in done:
                 tag = task.get_name()
                 value = tcdicn.decrypt(task.result(),key)
-                logging.info(f"Received {tag}={value}")
+                logging.info(f"Received {tag}={repr:value}")
                 if("depth" in tag):
                     value = float(value)
                     if(powerSafe):
