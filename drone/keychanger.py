@@ -40,6 +40,7 @@ async def main():
 
     # Publish random data to a random tag every couple of seconds
     async def run_sensor():
+        global key
         logging.info(f"KEY: {key}")
         while True:
             await asyncio.sleep(10)
