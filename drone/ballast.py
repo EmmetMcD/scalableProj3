@@ -66,15 +66,17 @@ async def main():
                 tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 tag = task.get_name()
-                value = float(tcdicn.decrypt(task.result(),key))
+                value = tcdicn.decrypt(task.result(),key)
                 logging.info(f"Received {tag}={value}")
                 if("depth" in tag):
+                    value = float(value)
                     if(powerSafe):
                         if(value >= 95):
                             logging.info("Depth approaching 100, rising...")
                         elif(value <= 5):
                             logging.info("Depth approaching 0, descending...")
                 elif("power" in tag):
+                    value = float(value)
                     if(value <= 10):
                         logging.info("Power approaching 0, surfacing...")
                 elif("keychange" in tag):
