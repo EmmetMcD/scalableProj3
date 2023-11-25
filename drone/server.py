@@ -1,3 +1,5 @@
+# Server device that listens to all devices communicatinng with it (at assigned port 33335)
+# Mostly implemented from tedski999's TCDICN with additional contributions from Emmet McDonald
 import asyncio
 import logging
 import os

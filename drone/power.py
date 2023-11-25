@@ -1,3 +1,5 @@
+# Power sensor that broadcasts current power level
+# Main Contributor - Emmet McDonald
 import asyncio
 import logging
 import os

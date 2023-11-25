@@ -1,3 +1,6 @@
+# Motor actuator that retrieves current X/Y location and adjusts
+# Main Contributor - Emmet McDonald
+
 import asyncio
 import logging
 import os

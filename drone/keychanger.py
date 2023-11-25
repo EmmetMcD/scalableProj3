@@ -1,13 +1,13 @@
-# Barometer sensor that broadcasts water pressure and a derived depth
-# Main contributor - Emmet McDonald
-
+# Keychanger device that updates network key every 10s to simulate key expiry
+# Admitedly hacky solution, and not incredibly secure, but slightly more secure vs. never updating the key.
+# Main Contributor - Emmet McDonald
 import asyncio
 import logging
 import os
 import random
 import sys
 import tcdicn
-
+from cryptography.fernet import Fernet
 
 async def main():
 
@@ -32,35 +32,26 @@ async def main():
     # Start the client as a background task
     logging.info("Starting client...")
     client = tcdicn.Client(
-        id+"_BAR", port, [id+"_pressure",id+"_depth"],
+        "KEYCHANGER", port, ["keychange"],
         server_host, server_port,
         net_ttl, net_tpf, net_ttp)
 
     # Publish random data to a random tag every couple of seconds
     async def run_sensor():
-        depth = random.randint(0,100)
         while True:
-            await asyncio.sleep(random.uniform(1, 2))
-            depth = depth + random.uniform(-5,5)
-            if(depth < 0):
-                depth = 0
-            pressure = depth * 10
-            logging.info(f"Publishing {id}_pressure = {pressure}...")
-            pressureStr = tcdicn.encrypt(pressure,key)
+            await asyncio.sleep(10)
+            newKey = Fernet.generate_key();
+            logging.info(f"Publishing keychange = {newKey}...")
+            newKeyEnc = tcdicn.encrypt(newKey,key)
             try:
-                await client.set(f"{id}_pressure", pressureStr)
+                await client.set("keychange", newKeyEnc)
             except OSError as e:
                 logging.error(f"Failed to publish: {e}")
-            logging.info(f"Publishing {id}_depth = {depth}...")
-            depthStr = tcdicn.encrypt(depth,key)
-            try:
-                await client.set(f"{id}_depth", depthStr)
-            except OSError as e:
-                logging.error(f"Failed to publish: {e}")
+            key = newKey
 
 
     # Initialise execution of the sensor logic as a coroutine
-    logging.info("Starting barometer...")
+    logging.info("Starting keychanger...")
     sensor = run_sensor()
 
     # Wait for the client to shutdown while executing the sensor coroutine
@@ -73,4 +64,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-

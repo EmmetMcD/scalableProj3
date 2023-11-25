@@ -1,3 +1,5 @@
+# Positioning sensor to broadcast drone's current X/Y location
+# Main Contributor - Emmet McDonald
 import asyncio
 import logging
 import os

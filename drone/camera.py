@@ -1,3 +1,7 @@
+# Camera sensor that reports 1 if it has 'captured' something of interest and 0 otherwise
+# In practice, this is pure RNG
+# Main contributor - Emmet McDonald
+
 import asyncio
 import logging
 import os

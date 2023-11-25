@@ -1,3 +1,6 @@
+# CONTRIBUTIONS: Most of this code came from Ted Johnson (tedski999)'s TCDICN Repository on GitHub
+# Parts changed by Group 26 team members are noted
+
 import asyncio
 import json
 import logging
@@ -509,6 +512,12 @@ class Client:
             del self.pending_interests[tag]
             logging.info(f"Fulfilled local interest in {tag} @ {new_time}")
 
+
+# Below is the encryption / decryption functions for all data that travels the network.
+# In reality, these functions should exist individually on every device;
+# But, in practice, keeping the functions here allows consistency whenever any change is made
+
+# Main contributor - Emmet McDonald
 def encrypt(data: str,key: bytes):
         data = str(data)
         data = bytes(data,"utf-8")
@@ -520,6 +529,7 @@ def encrypt(data: str,key: bytes):
         # mul = (bData * bKey).to_bytes(216,"big")
         # return mul.decode(errors="ignore")
     
+# Main contributor - Emmet McDonald
 def decrypt(data: str, key: bytes):
         data = str(data)
         data = bytes(data,"utf-8")

@@ -1,3 +1,8 @@
+# Ballast actuator that retrieves depth information and adjusts based on this
+# Also records power information and rises to surface if power is <=10%
+
+# Main Contributor - Emmet McDonald
+
 import asyncio
 import logging
 import os
