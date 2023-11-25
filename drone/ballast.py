@@ -10,13 +10,12 @@ import random
 import sys
 import tcdicn
 
-key = ""
+
 async def main():
 
     # Get parameters or defaults
     file = open("constants.txt","r")
     id = file.readline().strip()
-    global key
     key = open("key","rb").read()
     #id = os.environ.get("TCDICN_ID")
     port = int(os.environ.get("TCDICN_PORT", random.randint(33334, 65536)))
@@ -45,7 +44,6 @@ async def main():
 
     # Subscribe to random subset of data
     async def run_actuator():
-        global key
         tasks = set()
 
         def subscribe(tag):
@@ -57,8 +55,6 @@ async def main():
         subscribe(f"{id}_depth")
         logging.info(f"Subscribing to {id}_power...")
         subscribe(f"{id}_power")
-        logging.info(f"Subscribing to keychange...")
-        subscribe(f"keychange")
 
         powerSafe = True
         while True:
@@ -66,21 +62,17 @@ async def main():
                 tasks, return_when=asyncio.FIRST_COMPLETED)
             for task in done:
                 tag = task.get_name()
-                value = tcdicn.decrypt(task.result(),key)
-                logging.info(f"Received {tag}={repr:value}")
+                value = float(tcdicn.decrypt(task.result(),key))
+                logging.info(f"Received {tag}={value}")
                 if("depth" in tag):
-                    value = float(value)
                     if(powerSafe):
                         if(value >= 95):
                             logging.info("Depth approaching 100, rising...")
                         elif(value <= 5):
                             logging.info("Depth approaching 0, descending...")
                 elif("power" in tag):
-                    value = float(value)
                     if(value <= 10):
                         logging.info("Power approaching 0, surfacing...")
-                elif("keychange" in tag):
-                    key = bytes(value,'utf-8')
                 logging.info(f"Resubscribing to {tag}...")
                 subscribe(tag)
 
