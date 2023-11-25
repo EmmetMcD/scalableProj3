@@ -80,7 +80,7 @@ async def main():
                     if(value <= 10):
                         logging.info("Power approaching 0, surfacing...")
                 elif("keychange" in tag):
-                    key = value
+                    key = bytes(value,'utf-64')
                 logging.info(f"Resubscribing to {tag}...")
                 subscribe(tag)
 
