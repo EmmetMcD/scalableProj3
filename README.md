@@ -1,15 +1,15 @@
 Requires python3.8 and asyncio.
 
-
-
 Each device-name is in the constants file - update this for each new device in the network
 
-genDrone is a handy tmux-based script that spins up all the Drone's sensors/actuators:
+runme is a handy tmux-based script that spins up all the Drone's sensors/actuators:
 
-    source genDrone
+    source runme
     tmux attach
 
 You can then use ctrl+B [INT] to look at different devices' loggings
+
+PLEASE NOTE: Running 'runme' will only simulate one device - our demo simulated a network of devices by git pulling this project onto several Pis, editing constants.txt to give each device a unique name, and performing the above commands on each Pi.
 
 For manual running:
 Run the server:
