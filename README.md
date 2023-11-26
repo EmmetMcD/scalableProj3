@@ -9,7 +9,7 @@ genDrone is a handy tmux-based script that spins up all the Drone's sensors/actu
     source genDrone
     tmux attach
 
-You can then use ctrl+B [SENSORNAME/INT] to look at different devices' loggings
+You can then use ctrl+B [INT] to look at different devices' loggings
 
 For manual running:
 Run the server:
@@ -29,7 +29,4 @@ The sensors & their tags are as follows:
 * positioning.py - produces **xpos** & **ypos**
 * power.py - produces **power**
 * sampler.py - subscribes to **camera**, **depth**, **xpos**, **ypos** and GLOBAL **scienceList** , produces GLOBAL **scienceList** (scienceList is a global list shared across the network that lists all coordinates where science was done)
-
-If you would like to test locally with virtual ICN nodes, run one of the example scenarios using Docker [NOT SUCCESSFULLY TESTED YET]:
-
-    docker compose --file simulations/line.yml up --build
+* keychanger.py [EXPERIMENTAL] - THIS FILE IS NOT ACTIVATED BY genDrone! - attempts to broadcast an updated key that all other sensors would subscribe to, but encoding issues mean it does not work.

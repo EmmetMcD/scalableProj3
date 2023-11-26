@@ -1,5 +1,5 @@
 # Compass sensor that broadcasts current angle the drone is facing
-# Main Contributor - Emmet MCDonald
+# Main Contributor - Siddesh Bangar, Dila Bellik
 import asyncio
 import logging
 import os

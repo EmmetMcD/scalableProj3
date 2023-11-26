@@ -1,6 +1,9 @@
 # CONTRIBUTIONS: Most of this code came from Ted Johnson (tedski999)'s TCDICN Repository on GitHub
 # Parts changed by Group 26 team members are noted
 
+# Please note when taking into account contributions that all team members spent time examining this code to understand it,
+# as well as researching other potential solutions to see if they were good approaches.
+
 import asyncio
 import json
 import logging
@@ -517,7 +520,7 @@ class Client:
 # In reality, these functions should exist individually on every device;
 # But, in practice, keeping the functions here allows consistency whenever any change is made
 
-# Main contributor - Emmet McDonald
+# Main contributors - Emmet McDonald & Yulu Liu
 def encrypt(data: str,key: bytes):
         data = str(data)
         data = bytes(data,"utf-8")
@@ -529,7 +532,7 @@ def encrypt(data: str,key: bytes):
         # mul = (bData * bKey).to_bytes(216,"big")
         # return mul.decode(errors="ignore")
     
-# Main contributor - Emmet McDonald
+# Main contributors - Emmet McDonald & Yulu Liu
 def decrypt(data: str, key: bytes):
         data = str(data)
         data = bytes(data,"utf-8")

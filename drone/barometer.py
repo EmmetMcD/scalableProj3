@@ -1,5 +1,5 @@
 # Barometer sensor that broadcasts water pressure and a derived depth
-# Main contributor - Emmet McDonald
+# Main contributor - Dila Bellik, Yulu Liu
 
 import asyncio
 import logging

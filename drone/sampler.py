@@ -1,5 +1,5 @@
 # Sampler sensor/actuator for 'doing science' while underwater
-# Main contributor - Emmet McDonald
+# Main contributors - Emmet McDonald, Yulu Liu
 import asyncio
 import logging
 import os

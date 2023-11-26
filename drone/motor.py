@@ -1,5 +1,5 @@
 # Motor actuator that retrieves current X/Y location and adjusts
-# Main Contributor - Emmet McDonald
+# Main Contributors - Emmet McDonald, Yulu Liu
 
 import asyncio
 import logging

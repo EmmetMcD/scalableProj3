@@ -1,5 +1,5 @@
 # Positioning sensor to broadcast drone's current X/Y location
-# Main Contributor - Emmet McDonald
+# Main Contributors - Siddesh Bangar, Dila Bellik
 import asyncio
 import logging
 import os
